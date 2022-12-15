@@ -1,0 +1,16 @@
+PLINK v2.00a3.7LM AVX2 Intel (24 Oct 2022)
+Options in effect:
+  --pedmap Data/PLINK/case
+
+Hostname: jorrit-ubuntu-laptop
+Working directory: /home/jorrit/Projects/PRS-obesity
+Start time: Thu Dec 15 14:05:39 2022
+
+Random number seed: 1671109539
+15863 MiB RAM detected; reserving 7931 MiB for main workspace.
+Using up to 12 threads (change this with --threads).
+
+Error: Invalid chromosome code 'CHROM' on line 1 of .map file.
+(Use --allow-extra-chr to force it to be accepted.)
+
+End time: Thu Dec 15 14:05:39 2022

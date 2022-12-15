@@ -1,0 +1,38 @@
+# Supp[ress] Warnings
+options(warn=-1)
+# Get master directory from arguments
+args <- commandArgs(trailingOnly=TRUE)
+if (length(args) < 3) {
+  stop("Usage: Rscript smiss-vs-het.Rscript <smiss> <het> <output> <master_dir>")
+}
+# Set variables to arguments
+smiss_file <- args[1]
+het_file <- args[2]
+output <- args[3]
+master_dir <- args[4]
+setwd(master_dir)
+
+imiss=read.table(smiss_file,h=T)
+imiss$logF_MISS=log10(imiss[,6])
+
+het=read.table(het_file,h=T)
+het$meanHet = (het[,5] - het[,3])/het[,5]
+
+library("geneplotter", quietly = TRUE)
+colors  <- densCols(imiss$logF_MISS,het$meanHet)
+pdf(output)
+plot(imiss$logF_MISS,het$meanHet, col=colors, xlim=c(-3,0),ylim=c(0,0.5),pch=20, xlab="Proportion of missing genotypes", ylab="Heterozygosity rate",axes=F)
+axis(2,at=c(0,0.05,0.10,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5),tick=T)
+axis(1,at=c(-3,-2,-1,0),labels=c(0.001,0.01,0.1,1))
+abline(h=mean(het$meanHet)-(2*sd(het$meanHet)),col="RED",lty=2)
+abline(h=mean(het$meanHet)+(2*sd(het$meanHet)),col="RED",lty=2)
+abline(v=-1.522879, col="RED", lty=2)
+l <- het[het$meanHet < mean(het$meanHet)-(2*sd(het$meanHet)),]
+l2 <- l[,c(1, 2)]
+l3 <- imiss[imiss[,6] > 0.03,]
+l4 <- l3[,c(1,2)]
+
+x <- rbind(l2, l4)
+write.table(x[,c(1,2)], 'Data/PLINK/FAILS/fail-missing-qc.txt',row.names = F, col.names = F ,sep = '\t')
+dev.off()
+q()
