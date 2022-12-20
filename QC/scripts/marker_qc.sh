@@ -39,7 +39,7 @@ plink1.9 --bfile $marker_dir/$input --test-missing --make-bed --out $marker_dir/
 python $cwd/scripts/diffmiss-qc.py --input $marker_dir/$input.missing --master-directory $data_dir
 #perl $cwd/scripts/run-diffmiss-qc.pl $marker_dir/$input $data_dir
 
-# Eemoving poor SNPs
+# Removing poor SNPs
 ~/bin/plink2 --bfile $marker_dir/$input --exclude $data_dir/FAILS/fail-diffmiss-qc.txt --maf 0.01 --geno 0.05 \
 --make-pgen --out $cwd/Data/Output/$output
 

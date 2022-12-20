@@ -2,24 +2,20 @@
 # BiocManager::install("affyio")
 
 
-# Set input file equal to first argument
-project_dir=commandArgs()[6]
-print(commandArgs())
-if (substr(project_dir, nchar(project_dir), nchar(project_dir)) != "/") {
-  project_dir <- paste0(project_dir, "/")
-}
-
-
-lib_files <- paste(project_dir, "lib/", sep="")
-input_dir <- paste(project_dir, "Data/Raw/cychp/", sep="")
-
-
 # 2. Load packages
 library(affyio)
 library(dplyr)
+library(utils)
+
+# Get the argument files
+args <- commandArgs(trailingOnly = TRUE)
+input_file <- args[1]
+output_file <- args[2]
+lib_file <- args[3]
+
 
 annotate <- function(in_name, out_name, annotation){
-  print(in_name)
+  print(paste("Converting: ",in_name))
   geno <- Read.CYCHP(in_name)
   
   # background
@@ -97,11 +93,6 @@ annotate <- function(in_name, out_name, annotation){
   write.table(vcf_fmt_df, out_name, quote = F, sep = "\t", row.names = F)
 }
 
-annotation = read.csv(paste(lib_files, "CytoScanHD_Array.na33.annot.csv", sep = ''), comment.char = "#")
+annotation = read.csv(lib_file, comment.char = "#")
+annotate(input_file, output_file, annotation)
 
-files <- list.files(input_dir)
-for(file in files){
-  full_name <- paste(input_dir, file, sep="")
-  out <- paste(project_dir, "Data/VCF/", file, ".vcf", sep="")
-  annotate(full_name, out, annotation)
-}

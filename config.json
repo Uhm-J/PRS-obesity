@@ -1,0 +1,14 @@
+{
+	"DATA_DIR": "/home/jorrit/Projects/PRS-obesity/Data",
+	"RAW_DATA_DIR": "/home/jorrit/Projects/PRS-obesity/Data/Raw/cychp",
+	"VCF_DIR": "/home/jorrit/Projects/PRS-obesity/Data/VCF",
+	"ANNOTATION_FILE": "/home/jorrit/Projects/PRS-obesity/lib/CytoScanHD_Array.na33.annot.csv",
+	"PLINK_DIR": "/home/jorrit/Projects/PRS-obesity/Data/PLINK",
+	"TMP_NAME": "raw-GWA-data",
+	"PLINK2_BIN": "/home/jorrit/Projects/PRS-obesity/bin/plink2",
+	"HAPMAP": "/home/jorrit/Projects/PRS-obesity/Data/PLINK/Resources/Hapmap/hapmap3r2_CEU.CHB.JPT.YRI.founders.no-at-cg-snps",
+	"OUT_DIR": "/home/jorrit/Projects/PRS-obesity/Data/Output",
+	"SNPS": "/home/jorrit/Projects/PRS-obesity/Data/PLINK/Resources/Hapmap/hapmap3r2_CEU.CHB.JPT.YRI.no-at-cg-snps.txt",
+	"REF_GENOME": "/home/jorrit/Resources/Reference/hg19/fasta/assembly/hg19_nochr.fa",
+	"OUT_NAME": "clean-GWA-data"
+}

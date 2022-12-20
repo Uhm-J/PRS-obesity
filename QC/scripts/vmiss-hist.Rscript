@@ -2,14 +2,13 @@
 options(warn=-1)
 # Get master directory from arguments
 args <- commandArgs(trailingOnly=TRUE)
-if (length(args) < 3) {
-  stop("Usage: Rscript smiss-vs-het.Rscript <vmiss> <output> <master_dir>")
+if (length(args) < 2) {
+  stop("Usage: Rscript smiss-vs-het.Rscript <vmiss> <output>")
 }
 # Set variables to arguments
 vmiss <- args[1]
 output <- args[2]
-master_dir <- args[3]
-setwd(master_dir)
+
 
 x<-read.table(vmiss,header=T)
 ylabels=c("0","20K","40K","60K","80K","100K")

@@ -4,6 +4,7 @@ import glob
 # Create Argument parser, --dir is the project directory
 parser = argparse.ArgumentParser()
 parser.add_argument('--dir', help='Project directory')
+parser.add_argument('--out', help='Project directory')
 args = parser.parse_args()
 
 # Ensure that the project directory ends in a '/' character
@@ -11,10 +12,10 @@ if args.dir[-1] != '/':
     args.dir = args.dir + '/'
 
 # Create a list of all the vcf files in the project directory
-vcf_files = glob.glob(args.dir + 'Data/VCF/*.vcf')
+vcf_files = glob.glob(args.dir + '*.vcf')
 print(vcf_files)
 # Loop through the vcf files
-with open(args.dir+"/Data/PLINK/case.ped", 'w') as out:
+with open(args.out, 'w') as out:
     for vcf in vcf_files:
         print(vcf)
         # Open the vcf file

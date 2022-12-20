@@ -5,14 +5,13 @@ require("tidyr", quietly = TRUE)
 # Get master directory from arguments
 args <- commandArgs(trailingOnly=TRUE)
 if (length(args) < 4) {
-  stop("Usage: Rscript plot-pca.R <master_directory> <input> <hapmap> <output_pdf>")
+  stop("Usage: Rscript plot-pca.R <fail_txt> <input> <hapmap> <output_pdf>")
 }
 # Set variables to arguments
-master_dir <- args[1]
+fail <- args[1]
 input <- args[2]
 hapmap <- args[3]
 output <- args[4]
-setwd(master_dir)
 # Read in the data
 data <- read.table(input,h=F,skip=1)
 
@@ -60,6 +59,6 @@ data$FID <- as.numeric(data$FID)
 data$IID <- as.numeric(data$IID)
 
 # Write out the samples that are outside the CEU box
-write.table(data[which(!(pc1 & pc2)),c(1,2)], 'data/FAILS/fail-pca-qc.txt', row.names = F, col.names = F, sep = '\t')
+write.table(data[which(!(pc1 & pc2)),c(1,2)], fail, row.names = F, col.names = F, sep = '\t')
 dev.off()
 q()

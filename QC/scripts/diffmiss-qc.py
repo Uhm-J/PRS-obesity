@@ -2,7 +2,7 @@
 import argparse
 parser = argparse.ArgumentParser(description='Run diffmiss QC')
 parser.add_argument('--input', type=str, required=True, help='input file (.missing)')
-parser.add_argument('--master-directory', type=str, required=True, help='master directory')
+parser.add_argument('--output', type=str, required=True, help='output file')
 
 args = parser.parse_args()
 fails = []
@@ -18,6 +18,6 @@ with open(args.input, 'r') as f:
             fails.append(line[1])
 
 # Write output to file and create the file
-with open(args.master_directory + '/FAILS/fail-diffmiss-qc.txt', 'w') as f:
+with open(args.output, 'w') as f:
     for fail in fails:
         f.write(fail + '\n')
