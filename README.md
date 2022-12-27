@@ -28,16 +28,6 @@ The purpose of this pipeline is to process CYCHP array files, a type of genetic 
 
 The input to this pipeline consists of CYCHP array files stored in a specified directory (configured in the `config.json` file). The pipeline expects these files to be named according to a specific convention: `{patient}.cychp`.
 
-# Pipeline for Processing CYCHP Array Files to PRS Scores
-
-This pipeline is implemented using Snakemake, a Python-based workflow management system. It allows for the automation of complex pipelines and the management of dependencies between tasks.
-
-The purpose of this pipeline is to process CYCHP array files, a type of genetic data, and generate polygenic risk scores (PRS).
-
-## Input
-
-The input to this pipeline consists of CYCHP array files stored in a specified directory (configured in the `config.json` file). The pipeline expects these files to be named according to a specific convention: `{patient}.cychp`.
-
 ## Output
 
 The output of this pipeline is a PRS file, stored in a specified directory (configured in the `config.json` file). The output file will be named according to a specified convention (also configured in the `config.json` file).
