@@ -1,3 +1,32 @@
+# Pipeline for Processing CYCHP Array Files to PRS Scores
+
+## Table of Contents
+
+-   [Pipeline for Processing CYCHP Array Files to PRS Scores](#pipeline-for-processing-cychp-array-files-to-prs-scores)
+    -   [Input](#input)
+    -   [Output](#output)
+    -   [Configuration](#configuration)
+    -   [Dependencies](#dependencies)
+    -   [Execution](execution)
+    -   [Rules](#rules)
+        -   [`convert_cychp`](#convert_cychp)
+        -   [`convert_ped`](#convert_ped)
+        -   [`convert_map`](#convert_map)
+        -   [`PLINK_preprocess`](#plink_preprocess)
+        -   [QC Steps](#qc-steps)
+        -   [`removeInd`](#removeind)
+        -   [`PRSice`](#PRSice)
+        -   [`all`](#all)
+
+## Introduction
+
+This pipeline is implemented using Snakemake, a Python-based workflow management system. It allows for the automation of complex pipelines and the management of dependencies between tasks.
+
+The purpose of this pipeline is to process CYCHP array files, a type of genetic data, and generate polygenic risk scores (PRS).
+
+## Input
+
+The input to this pipeline consists of CYCHP array files stored in a specified directory (configured in the `config.json` file). The pipeline expects these files to be named according to a specific convention: `{patient}.cychp`.
 
 # Pipeline for Processing CYCHP Array Files to PRS Scores
 
