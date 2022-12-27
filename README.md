@@ -44,7 +44,7 @@ This pipeline also needs the following files:
 
 - Plink2 & Plink1.9 binary files ([CC Chang et al., 2015](https://academic.oup.com/gigascience/article/4/1/s13742-015-0047-8/2707533)).
 - PRSice linux executable and R script ([SW Choi et al., 2019](https://academic.oup.com/gigascience/article/8/7/giz082/5532407))
-- Cytoscan Array Analysis annotation file ([Affymetrix](https://www.affymetrix.com/api/downloads/na33/genotypering/))
+- Cytoscan Array Analysis annotation file ([Affymetrix](https://www.affymetrix.com/api/downloads/na33/genotyping/))
 -  International Hapmap Consortium ([IHP](https://www.genome.gov/10001688/international-hapmap-project)) 
  
 
