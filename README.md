@@ -54,7 +54,7 @@ This pipeline has the following dependencies:
 
 -   Python 3
 -   Snakemake
--   R >4.1 (and several packages)
+-   R >4.1 (and several packages, see pkgs_install.md for more information)
  
 
 ### Resources
