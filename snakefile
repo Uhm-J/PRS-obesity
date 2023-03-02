@@ -82,6 +82,7 @@ RDD=config['RAW_DATA_DIR']
 VD=config['VCF_DIR']
 plink2=config["PLINK2_BIN"]
 data_dir=config["DATA_DIR"]
+yaml_environment="env/env_prs.yaml"
 
 
 rule all:
@@ -92,6 +93,9 @@ rule all:
         '{}/{}.best'.format(config["OUT_DIR"], config["OUT_NAME"])
 
 rule convert_cychp:
+    threads: 1
+    mem_mb: 1024
+    conda: yaml_environment
     input:
         '{RDD}/{{patient}}'.format(RDD=RDD)
     output:
@@ -101,6 +105,9 @@ rule convert_cychp:
 
 
 rule convert_ped:
+    threads: 1
+    mem_mb: 1024
+    conda: yaml_environment
     input:
         expand('{VD}/{patient}.vcf',VD=VD, patient=get_patient_ids())
     output:
@@ -118,6 +125,7 @@ rule convert_map:
 
 # Preprocessing PLINK files
 rule PLINK_preprocess:
+    conda: yaml_environment
     input:
         ped='{}/{}.ped'.format(config["PLINK_DIR"], config["TMP_NAME"]),
         map='{}/{}.map'.format(config["PLINK_DIR"], config["TMP_NAME"])
@@ -132,16 +140,18 @@ rule PLINK_preprocess:
 # First step of QC: SexCheck
 # using plink1.9 since this is depreciated in plink2       
 rule PLINK_sexCheck:
+    conda: yaml_environment
     input:
         rules.PLINK_preprocess.output
     output:
         '{}/FAILS/fail-sexcheck-qc.txt'.format(config["PLINK_DIR"])
     shell:
-        'plink1.9 --bfile {config[PLINK_DIR]}/{config[TMP_NAME]} --check-sex --out {config[PLINK_DIR]}/{config[TMP_NAME]} &&'
+        '{plink1.9} --bfile {config[PLINK_DIR]}/{config[TMP_NAME]} --check-sex --out {config[PLINK_DIR]}/{config[TMP_NAME]} &&'
         'grep PROBLEM {config[PLINK_DIR]}/{config[TMP_NAME]}.sexcheck > {config[PLINK_DIR]}/{config[TMP_NAME]}.sexprobs &&'
         "awk '{{print $1,$2}}' {config[PLINK_DIR]}/{config[TMP_NAME]}.sexprobs > {config[PLINK_DIR]}/FAILS/fail-sexcheck-qc.txt"
 
 rule PLINK_missvshet:
+    conda: yaml_environment
     input: 
         rules.PLINK_preprocess.output
     output:
@@ -153,6 +163,7 @@ rule PLINK_missvshet:
         'Rscript QC/scripts/smiss-vs-het.Rscript {config[PLINK_DIR]}/{config[TMP_NAME]}.smiss {config[PLINK_DIR]}/{config[TMP_NAME]}.het {output.pdf} {output.txt}'
 
 rule PLINK_reldup:
+    conda: yaml_environment
     input:
         rules.PLINK_preprocess.output
     output:
@@ -162,6 +173,7 @@ rule PLINK_reldup:
         "awk 'NR!=1 {{print $2,$1; print $4,$3}}' {config[PLINK_DIR]}/{config[TMP_NAME]}.kin0 > {config[PLINK_DIR]}/FAILS/fail-relation-qc.txt"
 
 rule PLINK_ancestry_prune:
+    conda: yaml_environment
     input:
         rules.PLINK_preprocess.output
     output:
@@ -173,6 +185,7 @@ rule PLINK_ancestry_prune:
         "{plink2} --pfile {config[HAPMAP]} --extract {config[PLINK_DIR]}/{config[TMP_NAME]}.prune.in --make-pgen --out {config[PLINK_DIR]}/hapmap.pruned"
 
 rule PLINK_ancestry_convert:
+    conda: yaml_environment
     input:
         rules.PLINK_ancestry_prune.output
     output:
@@ -187,6 +200,7 @@ rule PLINK_ancestry_convert:
         "bcftools index -f {config[PLINK_DIR]}/{config[TMP_NAME]}.hapmap-snps.bcf"
 
 rule PLINK_ancestry_fixref:
+    conda: yaml_environment
     input:
         "{}/hapmap.bcf".format(config["PLINK_DIR"]),
         "{}/{}.hapmap-snps.bcf".format(config["PLINK_DIR"], config["TMP_NAME"])
@@ -202,6 +216,7 @@ rule PLINK_ancestry_fixref:
         "bcftools index -f {output[1]}"
 
 rule PLINK_ancestry_merge:
+    conda: yaml_environment
     input:
         "{}/hapmap.fixref.bcf".format(config["PLINK_DIR"]),
         "{}/{}.hapmap-snps.fixref.bcf".format(config["PLINK_DIR"], config["TMP_NAME"])
@@ -211,6 +226,7 @@ rule PLINK_ancestry_merge:
         "bcftools merge -Ob -o {output} {input[0]} {input[1]}"
 
 rule PLINK_ancestry_PCA:
+    conda: yaml_environment
     input:
         rules.PLINK_ancestry_merge.output
     output:
@@ -222,6 +238,7 @@ rule PLINK_ancestry_PCA:
         "Rscript QC/scripts/plot-pca.R {output.txt} {config[PLINK_DIR]}/{config[TMP_NAME]}.hapmap-snps.merged.eigenvec {config[HAPMAP]}.psam {output.pdf}"
 
 rule PLINK_removeInd:
+    conda: yaml_environment
     input:
         '{}/FAILS/fail-sexcheck-qc.txt'.format(config["PLINK_DIR"]),
         '{}/FAILS/fail-missing-qc.txt'.format(config["PLINK_DIR"]),
@@ -234,6 +251,7 @@ rule PLINK_removeInd:
         "{plink2} --pfile {config[PLINK_DIR]}/{config[TMP_NAME]} --remove {config[PLINK_DIR]}/FAILS/fail-qc-inds.txt --make-pgen --out {config[PLINK_DIR]}/{config[TMP_NAME]}.clean_inds"
 
 rule PLINK_markerQC_ExcessiveMissing:
+    conda: yaml_environment
     input:
         rules.PLINK_preprocess.output
     output:
@@ -243,6 +261,7 @@ rule PLINK_markerQC_ExcessiveMissing:
         "Rscript QC/scripts/vmiss-hist.Rscript {config[PLINK_DIR]}/{config[TMP_NAME]}.clean_inds.vmiss {output[0]}"
 
 rule PLINK_markerQC_Diffmissing:
+    conda: yaml_environment
     input:
         rules.PLINK_preprocess.output
     output:
@@ -253,6 +272,7 @@ rule PLINK_markerQC_Diffmissing:
         "python QC/scripts/diffmiss-qc.py --input {config[PLINK_DIR]}/{config[TMP_NAME]}.clean_inds.missing --output {output}"
 
 rule PLINK_markerQC:
+    conda: yaml_environment
     input:
         rules.PLINK_markerQC_Diffmissing.output
     output:
@@ -264,6 +284,7 @@ rule PLINK_markerQC:
         "{plink2} --pfile {config[OUT_DIR]}/{config[OUT_NAME]} --covar {config[OUT_DIR]}/{config[OUT_NAME]}.eigenvec --write-covar cols=sid,fid,sex --make-bed --out {config[OUT_DIR]}/{config[OUT_NAME]}"
 
 rule PRSice:
+    conda: yaml_environment
     input:
         rules.PLINK_markerQC.output
     output:
